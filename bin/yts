@@ -1,0 +1,6 @@
+#!/bin/sh
+
+query=$(printf '%s' "$*" | tr ' ' '+' )
+movie=$(curl -s https://yts.mx/browse-movies/$query/ | grep -Eo "https\:\/\/yts\.mx\/movies\/[a-zA-Z0-9?%-]*" | head -n 1)
+magnet=$(curl -s "$movie" | grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" | head -n 1)
+transmission-remote 10.0.0.224:9091 -a "$magnet" -w /home/moh/Downloads/

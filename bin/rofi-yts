@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Dependencies - mpv
+
+mkdir -p $HOME/.cache/notflix
+
+menu="rofi -show -dmenu -p Results"
+baseurl="https://yts.mx"
+cachedir="$HOME/.cache/yts"
+
+if [ -z $1 ]; then
+  query=$(rofi -show -dmenu -p "Search Torrent: ")
+  if [ -z "$query" ]; then
+    exit 0;
+  fi
+else
+  query=$1
+fi
+
+query="$(echo $query | sed 's/ /+/g')"
+
+curl -s $baseurl/browse-movies/$query > $cachedir/tmp.html
+
+# Get Titles
+grep -o '<a href="https://yts.mx/movies/.*</a>\|<div class="browse-movie-year.*</div>' $cachedir/tmp.html |
+  sed 's/<[^>]*>//g' | sed 'N;s/\n/ /' > $cachedir/titles.bw
+
+result_count=$(wc -l $cachedir/titles.bw | awk '{print $1}')
+if [ "$result_count" -lt 1 ]; then
+  notify-send "😔 No Result found. Try again 🔴" -i "NONE"
+  exit 0
+fi
+
+# Links
+grep -Eo 'https\:\/\/yts\.mx\/movies\/[a-zA-Z0-9?%-]*' $cachedir/tmp.html | uniq > $cachedir/links.bw
+
+# Clearning up some data to display
+sed 's/\./ /g; s/\-/ /g' $cachedir/titles.bw |
+  sed 's/[^A-Za-z0-9 ]//g' | tr -s " " > $cachedir/tmp && mv $cachedir/tmp $cachedir/titles.bw
+
+awk '{print NR " - ["$0"]"}' $cachedir/titles.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/titles.bw
+
+
+# Getting the line number
+LINE=$(cat $cachedir/titles.bw |
+  $menu |
+  cut -d\- -f1 |
+  awk '{$1=$1; print}')
+
+echo $LINE
+
+if [ -z "$LINE" ]; then
+  notify-send --hint int:transient:1 "😔 No Result selected. Exiting... 🔴" -i "NONE"
+  exit 0
+fi
+notify-send --hint int:transient:1 "🔍 Searching Magnet seeds 🧲" -i "NONE"
+url=$(head -n $LINE $cachedir/links.bw | tail -n +$LINE)
+fullURL="${url}"
+
+# Requesting page for magnet link
+curl -s $fullURL > $cachedir/tmp.html
+
+grep -o '<span class="tech-quality col-md-2.*</span>' $cachedir/tmp.html |
+  sed 's/<[^>]*>//g' > $cachedir/quality.bw
+
+awk '{print NR " - ["$0"]"}' $cachedir/quality.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/quality.bw
+
+magnetLine=$(cat $cachedir/quality.bw |
+  $menu |
+  cut -d\- -f1 |
+  awk '{$1=$1; print}')
+
+magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n $magnetLine | tail -n +$magnetLine) 
+
+transmission-remote 10.0.0.224:9091 -a "$magnet" -w /home/moh/Downloads/
+#webtorrent "$magnet" --vlc
+
+# Simple notification
+if [ -n "$magnet" ]; then
+  notify-send --hint int:transient:1 "🎥 Enjoy Watching ☺️ " -i "NONE"
+  exit 0
+fi

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+DOWNLOAD_DIR=~/Downloads/
+
+title="${@:-$(rofi -dmenu -p "Title")}" || exit
+json=$(curl -G --data-urlencode query_term="$title" "https://yts.mx/api/v2/list_movies.json" 2> /dev/null)
+
+results=$(echo "$json" | jq ".data.movies[] | .title_long" | tr -d '"')
+selected=$(echo "$results" | rofi -dmenu -p "Title" -format i) || exit
+title_long=$(echo "$json" | jq ".data.movies[$selected].title_long" | tr -d '"')
+qualities=$(echo "$json" | jq ".data.movies[$selected].torrents[] | .quality" | tr -d '"')
+quality=$(echo "$qualities" | rofi -dmenu -p "Quality" -format i) || exit
+torrent=$(echo "$json" | jq ".data.movies[$selected].torrents[$quality].url" | tr -d '"')
+
+wget "$torrent" -O ~/Downloads/torrent &> /dev/null || exit
+
+dir="$DOWNLOAD_DIR"/"$title_long"
+
+pgrep -x transmission-da || (transmission-daemon && notify-send "Starting transmission daemon..." && sleep 3 && pkill -RTMIN+7 i3blocks)
+
+#transmission-remote -a ~/Downloads/torrent -w "$dir" --torrent-done-script ~/.local/bin/tools/moviecleanup &> /dev/null && notify-send "  Torrent added"

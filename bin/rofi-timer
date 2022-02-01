@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+TIMER="$HOME/bin/timer/timer"
+
+echo -en "\0message\x1fSet Time in Seconds\n"
+
+if [ x"$@" = x"quit" ]
+then
+    exit 0
+else
+    # rofi-sensible-terminal -e
+    # $TIMER -d $@ > /dev/null 2>&1 & exit 0
+    $TIMER -d $@ > /dev/null 2>&1 & exit 0
+fi
+echo "quit"
+
