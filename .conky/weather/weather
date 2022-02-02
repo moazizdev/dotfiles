@@ -1,0 +1,130 @@
+# Conky Google Now style #
+
+# Conky settings #
+background no
+update_interval 1
+double_buffer yes
+no_buffers yes
+
+# Create own window instead of using desktop (required in nautilus)
+own_window yes
+own_window_transparent no
+own_window_type normal
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_argb_visual yes
+#own_window_argb_value 255
+#own_window_colour 2D2D2D
+
+minimum_size 400 800
+maximum_width 410
+
+# Alignment #
+alignment top_right
+gap_x 0
+gap_y 0
+xinerama_head 1
+
+border_inner_margin 15
+border_outer_margin 0
+
+# Graphics settings #
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+
+# Text settings #
+use_xft yes
+xftalpha 0
+xftfont Open Sans Light:size=10
+
+override_utf8_locale yes
+
+imlib_cache_size 0
+
+# Color scheme #
+default_color ffffff
+
+color1 FFFFFF
+color2 9933CC
+color3 669900
+color4 FF8800
+color5 CC0000
+color6 AAAAAA
+
+own_window_argb_value 128
+own_window_colour 000000
+
+# Loading lua script for drawning rings
+lua_load ./test.lua
+
+TEXT
+${execi 300 l=en; l=${l%%_*}; curl -s "api.openweathermap.org/data/2.5/forecast/daily?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/forecast.json}\
+${execi 300 l=en; l=${l%%_*}; curl -s "api.openweathermap.org/data/2.5/weather?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/weather.json}\
+${font Open Sans Light:size=16}${color0}${execi 300 jq -r .city.name ~/.cache/weatharConcky/forecast.json}, ${execi 300 jq -r .city.country ~/.cache/weatharConcky/forecast.json}${font}\
+${font Open Sans Light:size=86}${goto 246}${execi 300 jq -r .main.temp ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num}°${font}${color}${voffset -28}${goto 10}\
+${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/weather.png}${image $HOME/.cache/weatharConcky/weather.png -p 0,36 -s 60x60}${color0}${offset 5}${execi 300 jq -r .weather[0].description ~/.cache/weatharConcky/weather.json | sed "s|\<.|\U&|g"}
+${image $HOME/.conky-google-now-Openweather/wind.png -p 0,115 -s 15x15}${goto 35}${execi 300 jq -r .wind.speed ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num} m/s
+${image $HOME/.conky-google-now-Openweather/humidity.png -p 0,132 -s 15x15}${goto 35}${color0}${execi 300 jq -r .main.humidity ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num}%
+${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/current.png}${image ~/.cache/weatharConcky/current.png -p 11,203 -s 32x32}\
+${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[1].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-1.png}${image ~/.cache/weatharConcky/forecast-1.png -p 109,203 -s 32x32}\
+${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[2].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-2.png}${image ~/.cache/weatharConcky/forecast-2.png -p 193,203 -s 32x32}\
+${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[3].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-3.png}${image ~/.cache/weatharConcky/forecast-3.png -p 286,203 -s 32x32}\
+${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[4].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-4.png}${image ~/.cache/weatharConcky/forecast-4.png -p 374,203 -s 32x32}\
+\
+${voffset 30}\
+${font Open Sans Light:size=12}${color0}\
+${goto 30}${execi 300 LANG=en LC_TIME=en date +%^a}\
+${goto 120}${execi 300 LANG=en LC_TIME=en date -d +1day +%^a}\
+${goto 210}${execi 300 LANG=en LC_TIME=en date -d +2days +%^a}\
+${goto 300}${execi 300 LANG=en LC_TIME=en date -d +3days +%^a}\
+${goto 390}${execi 300 LANG=en LC_TIME=en date -d +4days +%^a}\
+\
+${voffset 57}\
+${goto 32}${execi 300 jq .list[0].temp.max ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 122}${execi 300 jq .list[1].temp.max ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 212}${execi 300 jq .list[2].temp.max ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 302}${execi 300 jq .list[3].temp.max ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 392}${execi 300 jq .list[4].temp.max ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+\
+${voffset 25}\
+${goto 32}${execi 300 jq .list[0].temp.min ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 122}${execi 300 jq .list[1].temp.min ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 212}${execi 300 jq .list[2].temp.min ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 302}${execi 300 jq .list[3].temp.min ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+${goto 392}${execi 300 jq .list[4].temp.min ~/.cache/weatharConcky/forecast.json | awk '{print int($1+0.5)}' # round num}°\
+
+${hr}
+#${color #ffffff}${font GeosansLight:pixelsize=25}The time is ${time %H:%M:%S}
+#${color #ffffff}${font GeosansLight:pixelsize=25}${time %A, %d %B, %Y}
+#${font GeosansLight:pixelsize=14}Host:$alignr$nodename
+#OS:$alignr${execi 1000 cat /etc/mx-version}
+${font GeosansLight:pixelsize=14}Uptime:$alignr$uptime
+#${font GeosansLight:pixelsize=14}Battery Time:$alignr$battery_time
+#${font GeosansLight:pixelsize=14}Battery:$alignr$battery_short
+# CPU usage:$alignr${cpu cpu0}%
+# RAM:$alignr$mem/$memmax
+# Swap usage:$alignr$swap/$swapmax
+Root usage:$alignr ${fs_used /} ${fs_bar /}/${fs_size /}
+Storage usage:$alignr ${fs_used /media/mohamed/storage} ${fs_bar /media/mohamed/storage}/${fs_size /media/mohamed/storage}
+#Home usage:$alignr${fs_used /home/tuaz}/${fs_size /home/tuaz}
+#Kernel:$alignr${kernel}
+${hr}
+${voffset -10}
+${color1}Internet Quota ${color0}${alignr}${execi 900 ./telecomegyptForecast.sh -d percent}%
+${execibar 900 ./telecomegyptForecast.sh -d percent }
+Used $alignr ${execi 900 ./telecomegyptForecast.sh -d quota}
+Due $alignr ${execi 900 ./telecomegyptForecast.sh -d due}
+${hr}
+${execi 60 ./upcomingPray.sh }
+# ${lua conky_main}
+#${voffset 20}\
+#${color FFA300}BBC News$color ${hr 1}
+#${execi 1 cat ./news.txt | ./ticker/ticker -a -l 70 -t 100 | fribidi  --ltr}
+#${hr}${execi 900 ./rss.sh > ./news.txt}
+${voffset 100}\
+${alignr}${color FFFFFF}${font GE Inspira:pixelsize=100}${time %I:%M}${font}${voffset -60}${offset 10}${color FFA300}${font GE Inspira:pixelsize=20}${time %d}${offset 5}${color FFFFFF}${font GE Inspira:pixelsize=20}${time %B} ${time %Y}${font}${voffset 15}${font GE Inspira:pixelsize=30}${offset -145}${time %A}${font}${voffset 22}
+${voffset 20}\
+${font size=12}  Berlin${goto 150}|  London${goto 300}|  New York
+  ${tztime Europe/Berlin %I:%M:%S %p}${goto 150}|  ${tztime Europe/London %I:%M:%S %p}${goto 300}|  ${tztime America/New_York %I:%M:%S %p}
+${font}

@@ -1,0 +1,15 @@
+{
+	"cache_dir": "/home/mohamed/.cache/weatharConcky",
+	"fetch_every_minute": "15",
+	"phone_number": "0552337692",
+	"password": "ob0NAKZSLCga1D0gJYtk1g==",
+	
+	"upcoming_prayer": {
+		"cache_dir": "/home/mohamed/.cache/upcomingPrayConky",
+		"fetch_every_minute": "360",
+		"city": "zagazig",
+		"school": 5,
+		"juristic": 1,
+		"timeformat": 0
+	}
+}
