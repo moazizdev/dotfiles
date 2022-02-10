@@ -111,10 +111,11 @@ Storage usage:$alignr ${fs_used /media/mohamed/storage} ${fs_bar /media/mohamed/
 #Kernel:$alignr${kernel}
 ${hr}
 ${voffset -10}
-${color1}Internet Quota ${color0}${alignr}${execi 900 ./telecomegyptForecast.sh -d percent}%
-${execibar 900 ./telecomegyptForecast.sh -d percent }
-Used $alignr ${execi 900 ./telecomegyptForecast.sh -d quota}
-Due $alignr ${execi 900 ./telecomegyptForecast.sh -d due}
+${execi 900 ./telecomegyptForecast.sh}\
+${color1}Internet Quota ${color0}${alignr}${exec awk -F',' '{printf "%.2f\n", $2}' ~/.cache/weatharConcky/output.cache}%
+${execbar awk -F',' '{printf "%.2f\n", $2}' ~/.cache/weatharConcky/output.cache }
+Used $alignr ${exec awk -F',' '{print $1}' ~/.cache/weatharConcky/output.cache}
+Due $alignr ${exec awk -F',' '{print $3}' ~/.cache/weatharConcky/output.cache}
 ${hr}
 ${execi 60 ./upcomingPray.sh }
 # ${lua conky_main}

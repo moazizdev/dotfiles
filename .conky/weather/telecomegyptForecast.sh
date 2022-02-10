@@ -63,6 +63,7 @@ function fetch_telecomegypt() {
   cache_path=$(get_cache_path)
   if [[ ! -f "${cache_path}" ]] || [[ "${refresh}" -eq 1 ]]; then
     echo "$command" > ${cache_path}.$$
+    write_to_csv
     # only update the file if we successfully retrieved the JSON
     num_of_lines=$(cat "${cache_path}.$$" | wc -c) #print the byte count of the file
     if [[ "${num_of_lines}" -gt 5 ]]; then
@@ -80,32 +81,37 @@ function create_cache() {
   fi
 }
 
-function return_field() {
+# function return_field() {
 
-  if [[ -z "${DATATYPE}" ]]; then
-    echo "ERROR: missing datatype. Please provide it via the -d option."
-  fi
+#   if [[ -z "${DATATYPE}" ]]; then
+#     echo "ERROR: missing datatype. Please provide it via the -d option."
+#   fi
 
+#   cache_path=$(get_cache_path)
+
+#   case ${DATATYPE} in
+#     quota)
+#       data=$(awk -F',' '{print $1}' ${CACHE_DIR}/output.cache)
+#       ;;
+#     percent)
+#       data=$(awk -F',' '{printf "%.2f\n", $2}' ${CACHE_DIR}/output.cache)
+#       ;;
+#     due)
+#       data=$(awk -F',' '{print $3}' ${CACHE_DIR}/output.cache)
+#       ;;
+#     *)
+#       data="N/A"
+#       ;;
+#     esac
+
+#   echo $data
+# }
+
+function write_to_csv() {
   cache_path=$(get_cache_path)
-
-  case ${DATATYPE} in
-    quota)
-      data=$(awk -F',' '{print $1}' ${CACHE_DIR}/output.cache)
-      ;;
-    percent)
-      data=$(awk -F',' '{printf "%.2f\n", $2}' ${CACHE_DIR}/output.cache)
-      ;;
-    due)
-      data=$(awk -F',' '{print $3}' ${CACHE_DIR}/output.cache)
-      ;;
-    *)
-      data="N/A"
-      ;;
-    esac
-
-  echo $data
+  $(awk -v date=$(date +%d/%m/%Y,%H:%M,) '{print date,$0}' ${CACHE_DIR}/output.cache >> ${CACHE_DIR}/data.csv)
 }
 
 create_cache
 fetch_telecomegypt
-return_field
+# return_field
