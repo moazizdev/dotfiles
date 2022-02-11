@@ -63,7 +63,6 @@ function fetch_telecomegypt() {
   cache_path=$(get_cache_path)
   if [[ ! -f "${cache_path}" ]] || [[ "${refresh}" -eq 1 ]]; then
     echo "$command" > ${cache_path}.$$
-    write_to_csv
     # only update the file if we successfully retrieved the JSON
     num_of_lines=$(cat "${cache_path}.$$" | wc -c) #print the byte count of the file
     if [[ "${num_of_lines}" -gt 5 ]]; then
@@ -109,9 +108,18 @@ function create_cache() {
 
 function write_to_csv() {
   cache_path=$(get_cache_path)
-  $(awk -v date=$(date +%d/%m/%Y,%H:%M,) '{print date,$0}' ${CACHE_DIR}/output.cache >> ${CACHE_DIR}/data.csv)
+  # last_modification_date=$(stat -c %Y ${cache_path})
+  # seconds=$(expr ${now} - ${last_modification_date})
+
+  # add 45 mins to interval time from config file
+  # interval=$((${Fetch_EVERY_MINUTE} + 45 * 60))
+
+  # if [[ "${seconds}" -gt ${interval} ]]; then
+    $(awk -v date=$(date +%d/%m/%Y-%H:%M,) '{print date,$0}' ${CACHE_DIR}/output.cache >> ${CACHE_DIR}/data.csv)
+  # fi
 }
 
 create_cache
 fetch_telecomegypt
+write_to_csv
 # return_field
