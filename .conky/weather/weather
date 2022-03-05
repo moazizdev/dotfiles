@@ -59,8 +59,8 @@ own_window_colour 000000
 lua_load ./test.lua
 
 TEXT
-${execi 300 l=en; l=${l%%_*}; curl -s "api.openweathermap.org/data/2.5/forecast/daily?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/forecast.json}\
-${execi 300 l=en; l=${l%%_*}; curl -s "api.openweathermap.org/data/2.5/weather?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/weather.json}\
+${execi 300 l=en; l=${l%%_*}; curl -s "https://api.openweathermap.org/data/2.5/forecast/daily?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/forecast.json}\
+${execi 300 l=en; l=${l%%_*}; curl -s "https://api.openweathermap.org/data/2.5/weather?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/weather.json}\
 ${font Open Sans Light:size=16}${color0}${execi 300 jq -r .city.name ~/.cache/weatharConcky/forecast.json}, ${execi 300 jq -r .city.country ~/.cache/weatharConcky/forecast.json}${font}\
 ${font Open Sans Light:size=86}${goto 246}${execi 300 jq -r .main.temp ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num}°${font}${color}${voffset -28}${goto 10}\
 ${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/weather.png}${image $HOME/.cache/weatharConcky/weather.png -p 0,36 -s 60x60}${color0}${offset 5}${execi 300 jq -r .weather[0].description ~/.cache/weatharConcky/weather.json | sed "s|\<.|\U&|g"}

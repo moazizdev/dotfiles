@@ -95,7 +95,7 @@ function getNextPrayer {
     jq -r 'to_entries | map(.key + "|" + (.value | tostring)) | .[]' <<<"$json" | \
         while IFS='|' read key value; do  
           if [[ $(date +%s -d "$value") > $now && !( ${arr[*]} =~ "$key" ) ]]; then
-              echo "$key in" $(( ( $(date +%s -d "$value") - $now ) / 60 )) "Mins";
+              echo "$key in" $(( ( $(date +%s -d "$value") - $now ) / 60 / 60 )) "hr" $(( ( $(date +%s -d "$value") - $now ) / 60 - ( $(date +%s -d "$value") - $now ) / 60 / 60 * 60  )) "min";
               break
           fi
         done
