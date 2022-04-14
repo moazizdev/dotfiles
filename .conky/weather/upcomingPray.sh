@@ -91,7 +91,7 @@ function getNextPrayer {
 
     #Loop through prayer time and get next one
     json=$(cat $(get_cache_path) | jq -r '.results.datetime[].times')
-    arr=['Sunrise','Sunset','Midnight','Imsak']
+    arr=['Sunrise','Sunset','Midnight']
     jq -r 'to_entries | map(.key + "|" + (.value | tostring)) | .[]' <<<"$json" | \
         while IFS='|' read key value; do  
           if [[ $(date +%s -d "$value") > $now && !( ${arr[*]} =~ "$key" ) ]]; then
