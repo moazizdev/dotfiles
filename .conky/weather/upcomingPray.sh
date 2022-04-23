@@ -95,31 +95,17 @@ function getNextPrayer {
     jq -r 'to_entries | map(.key + "|" + (.value | tostring)) | .[]' <<<"$json" | \
         while IFS='|' read key value; do  
           if [[ $(date +%s -d "$value") > $now && !( ${arr[*]} =~ "$key" ) ]]; then
-              echo "$key in" $(( ( $(date +%s -d "$value") - $now ) / 60 / 60 )) "hr" $(( ( $(date +%s -d "$value") - $now ) / 60 - ( $(date +%s -d "$value") - $now ) / 60 / 60 * 60  )) "min";
-              break
+            hours=$(( ( $(date +%s -d "$value") - $now ) / 60 / 60 ))
+            mins=$(( ( $(date +%s -d "$value") - $now ) / 60 - ( $(date +%s -d "$value") - $now ) / 60 / 60 * 60  ))
+            echo "$key in" $hours "hr" $mins "min";
+            
+            if [[ $hours == 0  && $mins == 15 ]]; then
+              notify-send "$key ($(date -d $value  +"%I:%M %p"))" --icon="azan" "  باقى على آذان الـ [$key] [ $mins دقيقة ] "
+            fi
+            break
           fi
         done
 }
-
-# PROGRAM LOGIC ================================================================
-# Parse options ----------------------------------------------------------------
-while getopts ":vh:" opt; do
-  case $opt in
-    h) mode="help"; break ;;
-    v) mode="version"; break ;;
-  esac
-done
-
-case $mode in
-  help)
-    echo "usage"
-    exit
-    ;;
-  version)
-    echo "prayer $version"
-    exit
-    ;;
-esac
 
 create_cache
 fetch_pray
