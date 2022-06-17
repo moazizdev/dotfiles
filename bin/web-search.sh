@@ -38,6 +38,7 @@ URLS=(
   ["piratebay"]="https://thepiratebay.org/search/"
   ["youtube"]="https://www.youtube.com/results?search_query="
   ["vimawesome"]="http://vimawesome.com/?q="
+  ["subscene"]="https://subscene.com/subtitles/searchbytitle?query="
 )
 
 # List for rofi
