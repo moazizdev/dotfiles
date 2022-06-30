@@ -9,7 +9,7 @@ baseurl="https://yts.mx"
 cachedir="$HOME/.cache/yts"
 
 if [ -z $1 ]; then
-  query=$(rofi -show -dmenu -p "Search Torrent: ")
+  query=$(rofi -show -dmenu -p "Search Movie Name")
   if [ -z "$query" ]; then
     exit 0;
   fi
@@ -22,8 +22,8 @@ query="$(echo $query | sed 's/ /+/g')"
 curl -s $baseurl/browse-movies/$query > $cachedir/tmp.html
 
 # Get Titles
-grep -o '<a href="https://yts.mx/movies/.*</a>\|<div class="browse-movie-year.*</div>' $cachedir/tmp.html |
-  sed 's/<[^>]*>//g' | sed 'N;s/\n/ /' > $cachedir/titles.bw
+grep -o '<a href="https://yts.mx/movies/.*</a>\|<div class="browse-movie-year.*</div>\|<h4 class="rating.*</h4>' $cachedir/tmp.html |
+  sed 's/<[^>]*>//g' | sed 's/\n/,/; N;s/\n/,/; N;s/\n/,/' > $cachedir/titles.bw
 
 result_count=$(wc -l $cachedir/titles.bw | awk '{print $1}')
 if [ "$result_count" -lt 1 ]; then
@@ -35,8 +35,8 @@ fi
 grep -Eo 'https\:\/\/yts\.mx\/movies\/[a-zA-Z0-9?%-]*' $cachedir/tmp.html | uniq > $cachedir/links.bw
 
 # Clearning up some data to display
-sed 's/\./ /g; s/\-/ /g' $cachedir/titles.bw |
-  sed 's/[^A-Za-z0-9 ]//g' | tr -s " " > $cachedir/tmp && mv $cachedir/tmp $cachedir/titles.bw
+sed 's/\-/ /g' $cachedir/titles.bw |
+  sed 's/[^A-Za-z0-9.,/ ]\+ //g' | tr -s " " | sed 's/ \/ 10/ /g; s/,/] [/g;' > $cachedir/tmp && mv $cachedir/tmp $cachedir/titles.bw
 
 awk '{print NR " - ["$0"]"}' $cachedir/titles.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/titles.bw
 
@@ -72,7 +72,7 @@ magnetLine=$(cat $cachedir/quality.bw |
 
 magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n $magnetLine | tail -n +$magnetLine) 
 
-transmission-remote 10.0.0.224:9091 -a "$magnet" -w /home/moh/Downloads/
+transmission-remote 10.0.0.224:9091 -a "$magnet" -w '/media/moh/ELEMENTS/Aflam/movie R/'
 #webtorrent "$magnet" --vlc
 
 # Simple notification

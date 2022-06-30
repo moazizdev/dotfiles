@@ -20,7 +20,7 @@ LABELS["apps"]=""
 
 # timer
 # COMMANDS["timer"]="rofi -show run -run-shell-command '{terminal} -e bash -ic \"{cmd}  && read \"'"
-COMMANDS["timer"]="rofi -show timer -modi "timer:rofi-timer""
+COMMANDS["timer"]="rofi -lines 1 -show timer -modi "timer:rofi-timer""
 LABELS["timer"]=""
 
 # notflix
@@ -28,7 +28,7 @@ COMMANDS["notflix"]="notflix"
 LABELS["notflix"]=""
 
 # search
-COMMANDS["search"]="web-search.sh"
+COMMANDS["search"]="web-search"
 LABELS["search"]=""
 
 # books
@@ -42,6 +42,10 @@ LABELS["currency"]="currency"
 # YTS
 COMMANDS["yts"]="rofi-yts"
 LABELS["yts"]="yts"
+
+# YTS
+COMMANDS["live"]="rofi_mpvtube"
+LABELS["live"]="live"
 
 # open bookmarks
 # COMMANDS["bookmarks"]="~/.scripts/rofi-scripts-collection/rofi-surfraw-bookmarks.sh"
