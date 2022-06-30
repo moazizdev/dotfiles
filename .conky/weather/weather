@@ -117,7 +117,8 @@ ${execbar awk -F',' '{printf "%.2f\n", $2}' ~/.cache/weatharConcky/output.cache 
 Used $alignr ${exec awk -F',' '{print $1}' ~/.cache/weatharConcky/output.cache}
 Due $alignr ${exec awk -F',' '{print $3}' ~/.cache/weatharConcky/output.cache}
 ${hr}
-${execi 60 ./upcomingPray.sh }${alignr}${execi 900 jq -r .results.datetime[0].date.hijri ~/.cache/upcomingPrayConky/upcoming_prayer.json}
+# ${execi 60 ./upcomingPray.sh }${alignr}${execi 900 jq -r .results.datetime[0].date.hijri ~/.cache/upcomingPrayConky/upcoming_prayer.json}
+${execi 60 ./upcomingPray2.sh }${alignr}${execi 900 jq -r '.data.date.hijri| "\(.day) \(.month.ar)"' ~/.cache/upcomingPrayConky/upcoming_prayer.json | fribidi  --ltr}
 # ${lua conky_main}
 #${voffset 20}\
 #${color FFA300}BBC News$color ${hr 1}

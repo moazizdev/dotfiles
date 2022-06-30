@@ -67,9 +67,9 @@ function fetch_pray() {
   if [[ ! -f "${cache_path}" ]] || [[ "${refresh}" -eq 1 ]]; then
     command=`curl -s https://api.pray.zone/v2/times/today.json?city=${CITY}\&school=${SCHOOL}\&juristic=${JURISTIC}\&timeformat=${TIMEFORMAT}`
     echo "$command" > ${cache_path}.$$
+    
     # only update the file if we successfully retrieved the JSON
-    num_of_lines=$(cat "${cache_path}.$$" | wc -c) #print the byte count of the file
-    if [[ "${num_of_lines}" -gt 5 ]]; then
+    if grep -q "\"status\": \"OK\"" "${cache_path}.$$"; then
       mv "${cache_path}.$$" ${cache_path}
     else
       rm -f ${cache_path}.$$
