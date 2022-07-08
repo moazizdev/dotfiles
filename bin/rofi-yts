@@ -50,10 +50,10 @@ LINE=$(cat $cachedir/titles.bw |
 echo $LINE
 
 if [ -z "$LINE" ]; then
-  notify-send --hint int:transient:1 "😔 No Result selected. Exiting... 🔴" -i "NONE"
+  notify-send --hint int:transient:1 "😔 No Result selected. Exiting... 🔴" -i "dialog-warning"
   exit 0
 fi
-notify-send --hint int:transient:1 "🔍 Searching Magnet seeds 🧲" -i "NONE"
+notify-send --hint int:transient:1 "🔍 Searching Magnet seeds 🧲" -i "system-search"
 url=$(head -n $LINE $cachedir/links.bw | tail -n +$LINE)
 fullURL="${url}"
 
@@ -70,13 +70,13 @@ magnetLine=$(cat $cachedir/quality.bw |
   cut -d\- -f1 |
   awk '{$1=$1; print}')
 
-magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n $magnetLine | tail -n +$magnetLine) 
+magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]{1,}" $cachedir/tmp.html | head -n $magnetLine | tail -n +$magnetLine) 
 
 transmission-remote 10.0.0.224:9091 -a "$magnet" -w '/media/moh/ELEMENTS/Aflam/movie R/'
 #webtorrent "$magnet" --vlc
 
 # Simple notification
 if [ -n "$magnet" ]; then
-  notify-send --hint int:transient:1 "🎥 Enjoy Watching ☺️ " -i "NONE"
+  notify-send --hint int:transient:1 "🎥 Enjoy Watching ☺️ " -i "emblem-downloads"
   exit 0
 fi
