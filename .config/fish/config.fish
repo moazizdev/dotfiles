@@ -18,3 +18,17 @@ if status is-interactive
 	#set -g fish_greeting "Welcome! Let's fish! 🐟 🐠"
 	alias dotfiles 'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 end
+
+# custom XDG varibales to clean Home directory
+set XDG_DATA_HOME 	"$HOME/.local/share"
+set XDG_CONFIG_HOME 	"$HOME/.config"
+set XDG_STATE_HOME  	"$HOME/.local/state"
+set XDG_CACHE_HOME 	"$HOME/.cache"
+
+set HISTFILE 		"$XDG_STATE_HOME"/bash/history
+set CUDA_CACHE_PATH 	"$XDG_CACHE_HOME"/nv
+set __GL_SHADER_DISK_CACHE_PATH 	"$XDG_CACHE_HOME"/nv
+set GNUPGHOME		"$XDG_DATA_HOME"/gnupg
+set LESSHISTFILE	"$XDG_CACHE_HOME"/less/history
+set NPM_CONFIG_USERCONFIG		"$XDG_CONFIG_HOME"/npm/npmrc
+set PGPASSFILE		"$XDG_CONFIG_HOME"/pg/pgpass
