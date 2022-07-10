@@ -63,14 +63,14 @@ ${execi 300 l=en; l=${l%%_*}; curl -s "https://api.openweathermap.org/data/2.5/f
 ${execi 300 l=en; l=${l%%_*}; curl -s "https://api.openweathermap.org/data/2.5/weather?APPID=97a25540c1634df8f0a4dd0ce82d557d&id=359493&cnt=5&units=metric&lang=$l" -o ~/.cache/weatharConcky/weather.json}\
 ${font Open Sans Light:size=16}${color0}${execi 300 jq -r .city.name ~/.cache/weatharConcky/forecast.json}, ${execi 300 jq -r .city.country ~/.cache/weatharConcky/forecast.json}${font}\
 ${font Open Sans Light:size=86}${goto 246}${execi 300 jq -r .main.temp ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num}°${font}${color}${voffset -28}${goto 10}\
-${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/weather.png}${image $HOME/.cache/weatharConcky/weather.png -p 0,36 -s 60x60}${color0}${offset 5}${execi 300 jq -r .weather[0].description ~/.cache/weatharConcky/weather.json | sed "s|\<.|\U&|g"}
-${image $HOME/.conky-google-now-Openweather/wind.png -p 0,115 -s 15x15}${goto 35}${execi 300 jq -r .wind.speed ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num} m/s
-${image $HOME/.conky-google-now-Openweather/humidity.png -p 0,132 -s 15x15}${goto 35}${color0}${execi 300 jq -r .main.humidity ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num}%
-${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/current.png}${image ~/.cache/weatharConcky/current.png -p 11,203 -s 32x32}\
-${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[1].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-1.png}${image ~/.cache/weatharConcky/forecast-1.png -p 109,203 -s 32x32}\
-${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[2].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-2.png}${image ~/.cache/weatharConcky/forecast-2.png -p 193,203 -s 32x32}\
-${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[3].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-3.png}${image ~/.cache/weatharConcky/forecast-3.png -p 286,203 -s 32x32}\
-${execi 300 cp -f ~/.conky-google-now-Openweather/$(jq .list[4].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-4.png}${image ~/.cache/weatharConcky/forecast-4.png -p 374,203 -s 32x32}\
+${execi 300 cp -f ~/.icons/conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/weather.png}${image $HOME/.cache/weatharConcky/weather.png -p 0,36 -s 60x60}${color0}${offset 5}${execi 300 jq -r .weather[0].description ~/.cache/weatharConcky/weather.json | sed "s|\<.|\U&|g"}
+${image ~/.icons/conky-google-now-Openweather/wind.png -p 0,115 -s 15x15}${goto 35}${execi 300 jq -r .wind.speed ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num} m/s
+${image ~/.icons/conky-google-now-Openweather/humidity.png -p 0,132 -s 15x15}${goto 35}${color0}${execi 300 jq -r .main.humidity ~/.cache/weatharConcky/weather.json | awk '{print int($1+0.5)}' # round num}%
+${execi 300 cp -f ~/.icons/conky-google-now-Openweather/$(jq .weather[0].id ~/.cache/weatharConcky/weather.json).png ~/.cache/weatharConcky/current.png}${image ~/.cache/weatharConcky/current.png -p 11,203 -s 32x32}\
+${execi 300 cp -f ~/.icons/conky-google-now-Openweather/$(jq .list[1].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-1.png}${image ~/.cache/weatharConcky/forecast-1.png -p 109,203 -s 32x32}\
+${execi 300 cp -f ~/.icons/conky-google-now-Openweather/$(jq .list[2].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-2.png}${image ~/.cache/weatharConcky/forecast-2.png -p 193,203 -s 32x32}\
+${execi 300 cp -f ~/.icons/conky-google-now-Openweather/$(jq .list[3].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-3.png}${image ~/.cache/weatharConcky/forecast-3.png -p 286,203 -s 32x32}\
+${execi 300 cp -f ~/.icons/conky-google-now-Openweather/$(jq .list[4].weather[0].id ~/.cache/weatharConcky/forecast.json).png ~/.cache/weatharConcky/forecast-4.png}${image ~/.cache/weatharConcky/forecast-4.png -p 374,203 -s 32x32}\
 \
 ${voffset 30}\
 ${font Open Sans Light:size=12}${color0}\
@@ -118,7 +118,8 @@ Used $alignr ${exec awk -F',' '{print $1}' ~/.cache/weatharConcky/output.cache}
 Due $alignr ${exec awk -F',' '{print $3}' ~/.cache/weatharConcky/output.cache}
 ${hr}
 # ${execi 60 ./upcomingPray.sh }${alignr}${execi 900 jq -r .results.datetime[0].date.hijri ~/.cache/upcomingPrayConky/upcoming_prayer.json}
-${execi 60 ./upcomingPray2.sh }${alignr}${execi 900 jq -r '.data.date.hijri| "\(.day) \(.month.ar)"' ~/.cache/upcomingPrayConky/upcoming_prayer.json | fribidi  --ltr}
+${execi 60 ./upcomingPray2.sh }${alignr}
+#${execi 900 jq -r '.data.date.hijri| "\(.day) \(.month.ar)"' ~/.cache/upcomingPrayConky/upcoming_prayer.json | fribidi  --ltr}
 # ${lua conky_main}
 #${voffset 20}\
 #${color FFA300}BBC News$color ${hr 1}
