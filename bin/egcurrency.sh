@@ -15,7 +15,7 @@ CURRENCIES=(
 )
 
 # egcurancy api URL
-URL="https://egcurancyapi.herokuapp.com/v1/currency"
+URL="https://egcurancyapi.onrender.com/v1/currency"
 
 
 all_banks_short_name(){
@@ -28,7 +28,7 @@ all_banks_short_name(){
 
     # sort_by(.sell) | reverse
     # to sort depending on sell column 
-    printf "%s\n" "$results" | jq -r 'sort_by(.sell) | .[] | "[\(.bank)]|[\(.buy)]|[\(.sell)]\t|\t[\(.updated_at | strftime("%d/%m/%Y"))][\(.updated_at | strflocaltime("%I:%M%p"))]"' |\
+    printf "%s\n" "$results" | jq -r 'sort_by(.sell) | .[] | "[\(.bank)]|\t[\(.buy)]|[\(.sell)]\t|\t[\(.updated_at | strftime("%d/%m/%Y"))][\(.updated_at | strflocaltime("%I:%M%p"))]"' |\
     column -s '|' -t
 }
 
