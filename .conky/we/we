@@ -1,0 +1,63 @@
+# Conky Google Now style #
+
+# Conky settings #
+background no
+update_interval 1
+double_buffer yes
+no_buffers yes
+
+# Create own window instead of using desktop (required in nautilus)
+own_window yes
+own_window_transparent yes
+own_window_type normal
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+own_window_argb_visual yes
+#own_window_argb_value 255
+#own_window_colour 2D2D2D
+
+minimum_size 300 80
+maximum_width 310
+
+# Alignment #
+alignment top_right
+gap_x 10
+gap_y 10
+xinerama_head 0
+
+border_inner_margin 15
+border_outer_margin 0
+
+# Graphics settings #
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+
+# Text settings #
+use_xft yes
+xftalpha 0
+xftfont Open Sans Light:size=10
+
+override_utf8_locale yes
+
+imlib_cache_size 0
+
+# Color scheme #
+default_color ffffff
+
+color1 FFFFFF
+color2 9933CC
+color3 669900
+color4 FF8800
+color5 CC0000
+color6 AAAAAA
+
+own_window_argb_value 0
+own_window_colour 000000
+
+
+TEXT
+${color1}Internet Quota ${color0}${alignr}${execi 300 jq .body.summarizedLineUsageList[3].usagePercentage ~/.cache/we.json}%
+${execibar 300 jq .body.summarizedLineUsageList[3].usagePercentage ~/.cache/we.json }
+remaining $alignr ${execi 300 jq .body.summarizedLineUsageList[3].freeAmount ~/.cache/we.json}/${exec jq .body.summarizedLineUsageList[3].initialTotalAmount ~/.cache/we.json}
+Due $alignr ${execi 300 jq -r .body.detailedLineUsageList[4].renewalDate ~/.cache/we.json}
