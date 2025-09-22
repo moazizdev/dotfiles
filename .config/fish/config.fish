@@ -32,3 +32,6 @@ set GNUPGHOME		"$XDG_DATA_HOME"/gnupg
 set LESSHISTFILE	"$XDG_CACHE_HOME"/less/history
 set NPM_CONFIG_USERCONFIG		"$XDG_CONFIG_HOME"/npm/npmrc
 set PGPASSFILE		"$XDG_CONFIG_HOME"/pg/pgpass
+
+# custom alias
+alias doom="$XDG_CONFIG_HOME/emacs/bin/doom"
